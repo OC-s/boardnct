@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+  <mapper namespace="com.net.board.dao.MemberDAO">
+ 	
+	<select id="getIdOne" resultType="MemberDTO" parameterType="String">
+		SELECT *
+		FROM member
+		WHERE id = #{id}
+	</select>
+ 	
+ 	<insert id="insertOne" parameterType="MemberDTO">
+ 		INSERT INTO member(id, password, nickname) 
+ 		value (#{id}, #{password}, #{nickname})
+ 	</insert>
+ 	
+ 	<select id="checkId" resultType="int">
+ 		SELECT COUNT(*)
+ 		FROM member
+ 		WHERE id = #{id}
+ 	</select>
+ 	
+ 	<select id="checkName" resultType="int">
+ 		SELECT COUNT(*)
+ 		FROM member
+ 		WHERE nickname = #{nickname}
+ 	</select>
+ 	
+ </mapper>
