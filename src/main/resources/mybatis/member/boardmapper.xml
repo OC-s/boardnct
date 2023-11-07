@@ -96,13 +96,6 @@
 		WHERE bno = #{bno}
 	</update>
 	
-	
-<!-- 	
-	<delete id="deleteOne" parameterType="int">
-		DELETE FROM board
-		WHERE bno = #{bno}
-	</delete>
- -->
  
 	<update id="deleteOne" parameterType="int">
 		UPDATE board

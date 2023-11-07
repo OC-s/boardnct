@@ -14,11 +14,11 @@
 
 </head>
 <body>
+	<%@ include file="../include/header.jsp"%>
+
 	<div class="container">
 		<table class="table table-striped-columns">
-			
 			<h1 style="text-align: center;">상세페이지</h1>
-           	
 			
 			 <div class="row g-5">
 		        <section class="col-md-3 col-lg-4 order-md-last">
@@ -30,106 +30,39 @@
 		            </aside>
 		        </section>
 		
-		        <article id="article-content" class="col-md-9 col-lg-8">
+		        <div id="article-content" class="col-md-9 col-lg-8">
 		            <h2>제목 : ${detaildto.title }</h2>
-		        </article>
+		        </div>
 		   	 </div>
 			 <div class="row g-5">
-		        <section class="col-md-3 col-lg-4 order-md-last">
-		            <aside>
+		        <section class="col-md-3 col-lg-8 order-md-last">
+		            <div>
 		                <h2>내용 : ${detaildto.contents }</h2>
-		            </aside>
+		            <div>
 		        </section>
 		   	 </div>
 			 <div>
 		       	<a href="list" class="btn btn-outline-primary">목록가기</a>
-				<a href="modify?bno=${detaildto.bno}" class="btn btn-outline-primary">수정하기</a>
-				<a href="delete?bno=${detaildto.bno}" class="btn btn-outline-primary">삭제하기</a>
+		       	
+		       	<!-- 작성자만 수정 가능 -->
+		       	<c:if test="${detaildto.nickname eq dto.nickname}">
+					<a href="modify?bno=${detaildto.bno}" class="btn btn-outline-primary">수정하기</a>
+		       	</c:if>
+		       	
+		       	<!-- 작성자 or 관리자 삭제가능 -->
+				<c:if test="${detaildto.nickname eq dto.nickname or dto.role eq 'ROLE_ADMIN'}">
+					<a href="delete?bno=${detaildto.bno}" class="btn btn-outline-primary">삭제하기</a>
+				</c:if>		       	
 		    </div>
 		  	
 		  	&ensp;
 		  	&ensp;
 		   
-		
-		    <div class="row 9-5">
-		        <sectoin>
-		            <form class="row g-3">
-		                <div class="col-md-9 col-lg-8">
-		                    <label for="articleComment" hidden>댓글</label>
-		                    <textarea class="form-control" id="articleComment" placeholder="댓글 쓰기.." rows="3"
-		                              required></textarea>
-		                </div>
-		                <div class="col-md-3 col-lg-4">
-		                    <label for="comment-submit" hidden>댓글 쓰기</label>
-		                    <button class="btn btn-primary" id="comment-submit" type="submit">쓰기</button>
-		                </div>
-		
-		            </form>
-		
-		            <ul id="article-comments" class="row col-md-10 col-lg-8 pt-3">
-		                <li>
-		                    <form>
-		                        <input hidden class="article-id">
-		                        <div class="row">
-		                            <div class="row col-md-10 col-lg-9">
-		                                <strong>닉네임</strong>
-		                                <small>
-		                                    <time>2022-01-01</time>
-		                                </small>
-		                                <p>
-		                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
-		                                    Lorem ipsum dolor sit amet
-		                                </p>
-		                            </div>
-		                        </div>
-		                    </form>
-		                </li>
-		                <li>
-		                    <form>
-		                        <input hidden class="article-id">
-		                        <div class="row">
-		                            <div class="row col-md-10 col-lg-9">
-		                                <strong>닉네임</strong>
-		                                <small>
-		                                    <time>2022-01-01</time>
-		                                </small>
-		                                <p>
-		                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
-		                                    Lorem ipsum dolor sit amet
-		                                </p>
-		                            </div>
-		                        </div>
-		                    </form>
-		                </li>
-		            </ul>
-		
-		        </sectoin>
-		    </div>
+			<%@ include file="reply.jsp" %>
 			
 		</table>
 	</div>
-	
-	
-		<!--
-			<tr>
-				<th>제목</th>
-			</tr>
-			<tr>
-				<th>내용 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</th>
-			</tr>
-			<tr>
-				<td><input type="hidden" name="list" value="${list.number}">${list.number }</td>
-				<td>${list.nickname}</td>
-				<td>${list.title}</td>
-				<td>${list.contents}</td>
-			</tr> 
-			 <tr>
-				<td colspan="4">
-					<a href="list" class="btn btn-outline-primary">목록가기</a>
-					<a href="modify?number=1" class="btn btn-outline-primary">수정하기</a>
-					<a href="delete?number=1" class="btn btn-outline-primary">삭제하기</a>
-				</td>
-			</tr> -->
+		 
 </body>
 
 </html>

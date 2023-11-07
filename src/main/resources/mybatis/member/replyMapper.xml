@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.net.board.dao.ReplyDAO">
+	
+	
+	<select id="getAll" parameterType="int" resultType="ReplyDTO">
+		SELECT r.*, m.nickname
+		FROM reply as r inner join member as m
+		ON r.mno = m.mno
+		WHERE r.bno = #{bno} 
+		AND r.deleted = 1
+		order by reno desc
+	</select>
+	
+	<select id="getCount" parameterType="int" resultType="int">
+		SELECT count(*)
+		FROM reply
+		WHERE bno = #{bno}
+		AND deleted = 1
+	</select>
+	
+	<insert id="insertOne" parameterType="ReplyDTO">
+		insert into reply (bno, mno, recontents, redate)
+		values (#{bno}, #{mno}, #{recontents}, now())
+	</insert>
+	
+	<update id="updateOne" parameterType="ReplyDTO">
+		UPDATE reply
+		SET recontents = #{recontents}
+		WHERE reno = #{reno}
+	</update>
+	
+	<delete id="deleteOne" parameterType="int">
+		UPDATE reply
+		SET deleted = 0
+		WHERE reno = #{reno}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="int">
+		UPDATE reply
+		SET deleted = 0
+		WHERE bno = #{bno}
+	</delete>
+	
+
+</mapper>
+
+
+

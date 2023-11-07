@@ -3,6 +3,8 @@ package com.net.board.control;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.ibatis.javassist.compiler.ast.Keyword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.net.board.dto.BoardDTO;
 import com.net.board.dto.MemberDTO;
+import com.net.board.dto.ReplyDTO;
 import com.net.board.service.BoardService;
 import com.net.board.service.MemberService;
+import com.net.board.service.ReplyService;
 import com.net.board.utill.PageUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +35,8 @@ public class BoardController {
 	@Autowired
 	BoardService bService;
 	
+	@Autowired
+	ReplyService reService;
 	
 	@GetMapping("/")
 	public String index(Model model,Authentication authentication) {
@@ -99,26 +105,6 @@ public class BoardController {
 		return "board/list";
 	}
 
-	
-	@GetMapping("modify")
-	public String modify(@RequestParam("bno")int bno, Model model) {
-		
-		BoardDTO dtoModify = bService.getOne(bno);
-		model.addAttribute("dtoModify", dtoModify);
-		
-		log.info("modify : " + dtoModify);
-		
-		return "board/modify";
-	}
-	
-	@PostMapping("modify")
-	public String modifyOk(@ModelAttribute("BoardDTO")BoardDTO bdto) {
-		bService.updateOne(bdto);
-		
-		return "redirect:list";
-	}
-	
-
 	// 작성	
 	@GetMapping("write")
 	public String writeForm(Model model,Authentication authentication) {
@@ -139,14 +125,46 @@ public class BoardController {
 	}
 	
 	
+	@GetMapping("modify")
+	public String modify(@RequestParam("bno")int bno, Model model, HttpServletRequest request) {
+		
+		BoardDTO dtoModify = bService.getOne(bno);
+		model.addAttribute("dtoModify", dtoModify);
+		
+		// 수정시 이전페이지 상세페이지 링크 넘겨준후 postmapping에서 리다이렉트		
+		String uri = request.getHeader("referer");
+		model.addAttribute("uri", uri);
+		
+		log.info("test : " + uri);
+		log.info("modify : " + dtoModify);
+		
+		return "board/modify";
+	}
+	
+	@PostMapping("modify")
+	public String modifyOk(@ModelAttribute("BoardDTO")BoardDTO bdto, @RequestParam("uri")String uri) {
+		
+		bService.updateOne(bdto);
+		
+		return "redirect:"+uri;
+	}
+
+	
+	
 	@GetMapping("detail")
-	public String detail(Model model, @RequestParam("bno")int bno) {
+	public String detail(Model model, @RequestParam("bno")int bno, Authentication authentication) {
 		
 		BoardDTO detaildto = bService.getOne(bno);
 		model.addAttribute("detaildto",detaildto);
 		
-		log.info("상세 : " + detaildto);
+		int total = reService.getTotal(bno);
+		model.addAttribute("total", total);
 		
+		MemberDTO mdto = service.getIdOne(authentication.getName());
+		model.addAttribute("dto", mdto);
+		
+		log.info("상세 : " + detaildto);
+		log.info("member : " + mdto);
 		
 		return "board/detail";
 	}
@@ -154,6 +172,7 @@ public class BoardController {
 	@GetMapping("delete")
 	public String deleteOk(@RequestParam("bno")int bno) {
 		bService.deleteOne(bno);
+		reService.removeAll(bno);
 		return "redirect:list";
 	}
 	

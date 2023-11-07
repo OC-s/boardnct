@@ -12,6 +12,7 @@
 
 </head>
 <body>
+	<%@ include file="../include/header.jsp"%>
 	<div class="container">
 		<h1 style="text-align: center;">작성</h1>
 		<form action="write" method="post" onsubmit="return Check()">

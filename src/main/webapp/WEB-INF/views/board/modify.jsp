@@ -11,8 +11,10 @@
 
 </head>
 <body>
+	<%@ include file="../include/header.jsp"%>
 	<div class="container">
 		<form action="modify" method="post">
+			<input type="hidden" name="uri" value="${uri }">
 			<table class="table table-striped-columns">
 				<h1 style="text-align: center;">수정</h1>
 				<tr>
